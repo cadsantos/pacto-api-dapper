@@ -1,0 +1,6 @@
+@Fiotec.Pacto.API_HostAddress = http://localhost:5204
+
+GET {{Fiotec.Pacto.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
