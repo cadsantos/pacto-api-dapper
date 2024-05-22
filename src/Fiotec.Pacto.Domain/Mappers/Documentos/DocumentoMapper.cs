@@ -20,9 +20,12 @@ namespace Fiotec.Pacto.Domain.Mappers.Documentos
                 HabilitadoNotificacao = entity.HabilitadoNotificacao,
                 IdProprietario = entity.IdProprietario,
                 NomeProprietario = entity.NomeProprietario,
+                IdUsuario = entity.IdUsuario,
+                NomeUsuario = entity.NomeUsuario,
                 NomeArquivo = entity.NomeArquivo,
                 IdTipoFinalizacao = entity.IdTipoFinalizacao,
-                Assinaturas = entity.Assinaturas.Select(AssinaturaMapper.MapFromEntity).ToList()
+                Assinaturas = entity.Assinaturas.Select(AssinaturaMapper.MapFromEntity).ToList(),
+                TipoAssinatura = entity.TipoAssinatura?.Nome
             };
         }
     }

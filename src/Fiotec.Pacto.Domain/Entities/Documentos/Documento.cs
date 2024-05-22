@@ -18,13 +18,13 @@ namespace Fiotec.Pacto.Domain.Entities.Documentos
         public bool HabilitadoRodape { get; private set; }
         public bool HabilitadoOrdemAssinatura { get; private set; }
         public bool? HabilitadoNotificacao { get; private set; }
+        public string? NomeUsuario { get; private set; }
         public string? NomeProprietario { get; private set; }
         public string? Nome { get; private set; }
         public string? Descricao { get; private set; }
         public string? NomeArquivo { get; private set; }
         public string? InformacoesAdicionais { get; private set; }
         public string? MotivoExclusao { get; private set; }
-        public string? NomeUsuario { get; private set; }
         public DateTime? DataPrazoFinalizacao { get; private set; }
         public DateTime? DataCadastro { get; private set; }
         public DateTime? DataExclusao { get; private set; }

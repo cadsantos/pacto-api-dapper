@@ -35,7 +35,7 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Documentos
             return pendentes_assinatura.ToImmutableList();
         }
 
-        public async Task<Documento> ObterDocumentoDetalhesPorKey(Guid key, CancellationToken cancellationToken)
+        public async Task<Documento?> ObterDocumentoDetalhesPorKey(Guid key, CancellationToken cancellationToken)
         {
             Dictionary<int, Documento> documentosDictionary = new();
 
@@ -45,9 +45,15 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Documentos
 
             //var documento_detalhes = await sqlConnection.QueryAsync<Documento>(
             //    new CommandDefinition("sp_ObterDocumentoPorKey", parameters: parametros, commandType: CommandType.StoredProcedure, cancellationToken: cancellationToken));
-            var documento_detalhe = await sqlConnection.QueryAsync<Documento, Assinatura, Documento>
-                ("sp_ObterDocumentoPorKey", (d, a) =>
+            var documento_detalhe = await sqlConnection.QueryAsync<Documento, Assinatura, TipoAssinatura, StatusAssinatura, TipoFinalizacao, StatusAssinatura, Documento>
+                ("sp_ObterDocumentoPorKey", (d, a, ta, sd, tf, sa) =>
                 {
+                    if (ta != null) d.TipoAssinatura = ta;
+                    if (sd != null) d.StatusDocumento = sd;
+                    if (tf != null) d.TipoFinalizacao = tf;
+                    //if (ti != null) a.TipoIdentificacao = ti;
+                    if (sa != null) a.StatusAssinatura = sa;
+
                     if (documentosDictionary.TryGetValue(d.Id, out var documentoEncontrado))
                         d = documentoEncontrado;
                     else
@@ -56,8 +62,8 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Documentos
                     return d;
                 }, new
                 {
-                    DocumentoKey = key                    
-                }, splitOn: "Id,Id,Id", commandType: CommandType.StoredProcedure);
+                    DocumentoKey = key
+                }, splitOn: "Id,Id,Id,Id,Id,Id", commandType: CommandType.StoredProcedure);
 
             //return documento_detalhes.ToImmutableList();
             return documento_detalhe.GroupBy(d => d.Id).Select(g => g.First()).FirstOrDefault();

@@ -14,7 +14,26 @@ namespace Fiotec.Pacto.Domain.Mappers.Assinaturas
         {
             return new AssinaturaViewModel
             {
-                Id = entity.Id
+                Id = entity.Id,
+                IdDocumento = entity.IdDocumento,
+                IdStatus = entity.IdStatus,
+                IdAssinante = entity.IdAssinante,
+                IdTipoIdentificacao = entity.IdTipoIdentificacao,
+                Excluido = entity.Excluido,
+                Ordem = entity.Ordem,
+                Key = entity.Key,
+                MotivoDeclinio = entity.MotivoDeclinio,
+                CargoAssinante = entity.CargoAssinante,
+                NumeroDocumento = entity.NumeroDocumento,
+                NomeAssinante = entity.NomeAssinante,
+                JustificativaExclusao = entity.JustificativaExclusao,
+                IdentificacaoAssinante = entity.IdentificacaoAssinante,
+                QualificacaoAssinante = entity.QualificacaoAssinante,
+                DataLimiteAssinatura = entity.DataLimiteAssinatura?.ToString(),
+                DataAssinaturaEletronica = entity.DataAssinaturaEletronica?.ToString(),
+                DataAssinaturaDigital = entity.DataAssinaturaDigital?.ToString(),
+                DataDeclinio = entity.DataDeclinio?.ToString(),
+                Justificativa = entity.Justificativa
             };
         }
     }

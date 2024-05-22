@@ -23,7 +23,7 @@ namespace Fiotec.Pacto.Domain.Entities.Assinaturas
         public DateTime? DataLimiteAssinatura { get; private set; }
         public DateTime? DataAssinaturaEletronica { get; private set; }
         public DateTime? DataAssinaturaDigital { get; private set; }
-        public DateTime? DataDeclinioAssinatura { get; private set; }
+        public DateTime? DataDeclinio { get; private set; }
         public string? Justificativa { get; private set; }
 
         public Documento? Documento { get; private set; }
