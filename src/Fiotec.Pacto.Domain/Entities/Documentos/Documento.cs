@@ -1,5 +1,6 @@
 ﻿using Fiotec.Pacto.Domain.Entities.Assinaturas;
 using Fiotec.Pacto.Domain.Entities.Dicionarios;
+using Fiotec.Pacto.Domain.Enums;
 
 namespace Fiotec.Pacto.Domain.Entities.Documentos
 {
@@ -33,5 +34,41 @@ namespace Fiotec.Pacto.Domain.Entities.Documentos
         public TipoAssinatura? TipoAssinatura { get; set; }
         public TipoFinalizacao? TipoFinalizacao { get; set; }
         public StatusAssinatura? StatusDocumento { get; set; }
+
+        public bool IsProprietario(int id)
+        {
+            return IdUsuario == id;
+        }
+
+        public bool IsProprietarioAssinante(int id)
+        {
+            return IdUsuario == id && Assinaturas.Any(a => a.IdAssinante == id);
+        }
+
+        public bool IsNenhumaAssinaturaRealizada()
+        {
+            return Assinaturas.All(a => a.IdStatus == (int)EStatusAssinatura.NaoAssinado);
+        }
+
+        public bool IsAssinadoParcialmente()
+        {
+            return Assinaturas.Any(a => a.IdStatus == (int)EStatusAssinatura.Assinado);
+        }
+
+        public bool IsAssinadoTotalmente()
+        {
+            return Assinaturas.All(a => a.IdStatus == (int)EStatusAssinatura.Assinado);
+        }
+
+        public bool IsFinalizado()
+        {
+            return IdStatus == (int)EStatusAssinatura.Assinado && Assinaturas.All(a => a.IdStatus == (int)EStatusAssinatura.Assinado);
+        }
+
+        public bool IsDeclinadoExpirado()
+        {
+            int?[] statusDeclinadoExpirado = { (int)EStatusAssinatura.Cancelado, (int)EStatusAssinatura.Expirado };
+            return statusDeclinadoExpirado.Contains(IdStatus) && Assinaturas.Any(a => statusDeclinadoExpirado.Contains(a.IdStatus));
+        }
     }
 }

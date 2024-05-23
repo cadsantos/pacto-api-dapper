@@ -27,7 +27,7 @@ namespace Fiotec.Pacto.Domain.Entities.Assinaturas
         public string? Justificativa { get; private set; }
 
         public Documento? Documento { get; private set; }
-        //public Tipoi TipoIdentificacao { get; set; }
+        public TipoIdentificacao? TipoIdentificacao { get; set; }
         public StatusAssinatura? StatusAssinatura { get; set; }
     }
 }

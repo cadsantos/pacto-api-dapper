@@ -1,10 +1,5 @@
 ﻿using Fiotec.Pacto.Domain.Entities.Assinaturas;
 using Fiotec.Pacto.Domain.Models.ViewModels.Assinaturas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fiotec.Pacto.Domain.Mappers.Assinaturas
 {
@@ -17,8 +12,10 @@ namespace Fiotec.Pacto.Domain.Mappers.Assinaturas
                 Id = entity.Id,
                 IdDocumento = entity.IdDocumento,
                 IdStatus = entity.IdStatus,
+                Status = entity.StatusAssinatura?.Nome,
                 IdAssinante = entity.IdAssinante,
                 IdTipoIdentificacao = entity.IdTipoIdentificacao,
+                TipoIdentificacao = entity.TipoIdentificacao?.Descricao,
                 Excluido = entity.Excluido,
                 Ordem = entity.Ordem,
                 Key = entity.Key,

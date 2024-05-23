@@ -8,7 +8,7 @@ namespace Fiotec.Pacto.Infra.IoC
     {
         public static void ConfigureServices(this IServiceCollection services, ConfigurationManager configuration)
         {
-            ServiceInfrastrutureExtensions.AddServiceInfrastruture(services);
+            ServiceInfrastrutureExtensions.AddServiceInfrastruture(services, configuration);
             ServiceApplicationExtensions.AddServiceApplication(services);
         }
     }
