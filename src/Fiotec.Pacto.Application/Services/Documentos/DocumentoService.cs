@@ -1,9 +1,11 @@
-﻿using Fiotec.Pacto.Domain.Enums;
+﻿using Fiotec.Pacto.Domain.Entities.Documentos;
+using Fiotec.Pacto.Domain.Enums;
 using Fiotec.Pacto.Domain.Mappers.Documentos;
 using Fiotec.Pacto.Domain.Models.ViewModels.Documentos;
 using Fiotec.Pacto.Domain.Ports.Driven.Documentos;
 using Fiotec.Pacto.Domain.Ports.Driven.Services.Historicos;
 using Fiotec.Pacto.Domain.Ports.Driving.Documentos;
+using System.Linq;
 
 namespace Fiotec.Pacto.Application.Services.Documentos
 {
@@ -18,14 +20,14 @@ namespace Fiotec.Pacto.Application.Services.Documentos
             var pendentes = await _documentoRepository.ObterDocumentosPendentesAssinaturaPorIdUsuario(idUsuario, cancellationToken);
             return pendentes.Select(PendenteAssinaturaMapper.MapFromDTO);
         }
-
+        
         public async Task<IEnumerable<PendenteFinalizacaoManualViewModel>> ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
         {
             var pendentes_manual = await _documentoRepository.ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(idUsuario, cancellationToken);
             return pendentes_manual.Select(PendenteFinalizacaoManualMapper.MapFromDTO);
         }
-
-        public async Task<DocumentoViewModel> ObterDocumentosDetalhesPorKey(Guid key, CancellationToken cancellationToken)
+        
+        public async Task<DocumentoViewModel> ObterDocumentoDetalhesPorKey(Guid key, CancellationToken cancellationToken)
         {
             var documento = await _documentoRepository.ObterDocumentoDetalhesPorKey(key, cancellationToken);
 
@@ -191,6 +193,27 @@ namespace Fiotec.Pacto.Application.Services.Documentos
                 ProcessoDescricao = historico.ProcessDetail
             }));
             return documentoDetalhes;
+        }
+
+        public async Task<IEnumerable<HistoricoDocumentoViewModel>> ObterDocumentoHistoricoPorKey(Guid key, CancellationToken cancellationToken)
+        {
+            var historicos_servico = await _historicoService.ObterHistoricoDocumento(key);
+
+            if (historicos_servico is null)
+                return new List<HistoricoDocumentoViewModel>();
+
+            return (from item in historicos_servico.Result
+                    let hist = new HistoricoDocumentoViewModel()
+                    {
+                        UsuarioId = item.UserLoginId.HasValue ? item.UserLoginId.Value : 0,
+                        KeyDocumento = Guid.Parse(item.InstanceKey),
+                        NomeUsuario = item.UserLoginName,
+                        DataInclusao = item.DateTimeCreate.ToString(),
+                        Status = item.SystemStatusDetail,
+                        Descricao = item.Justification,
+                        ProcessoDescricao = item.ProcessDetail
+                    }
+                    select hist).ToList();
         }
     }
 }

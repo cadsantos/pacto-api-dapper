@@ -6,6 +6,7 @@ namespace Fiotec.Pacto.Domain.Ports.Driving.Documentos
     {
         Task<IEnumerable<PendenteAssinaturaViewModel>> ObterDocumentosPendentesAssinaturaPorIdUsuario(int idUsuario, CancellationToken cancellationToken);
         Task<IEnumerable<PendenteFinalizacaoManualViewModel>> ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(int idUsuario, CancellationToken cancellationToken);
-        Task<DocumentoViewModel> ObterDocumentosDetalhesPorKey(Guid key, CancellationToken cancellationToken);
+        Task<DocumentoViewModel> ObterDocumentoDetalhesPorKey(Guid key, CancellationToken cancellationToken);
+        Task<IEnumerable<HistoricoDocumentoViewModel>> ObterDocumentoHistoricoPorKey(Guid key, CancellationToken cancellationToken);
     }
 }

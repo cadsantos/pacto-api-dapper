@@ -31,7 +31,14 @@ namespace Fiotec.Pacto.API.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> ObterDocumentosDetalhesPorKey(Guid key, CancellationToken cancellationToken)
         {
-            var pendentes = await _documentoService.ObterDocumentosDetalhesPorKey(key, cancellationToken);
+            var pendentes = await _documentoService.ObterDocumentoDetalhesPorKey(key, cancellationToken);
+            return Ok(pendentes);
+        }
+
+        [HttpGet("{key}/historico")]
+        public async Task<IActionResult> ObterDocumentosHistoricoPorKey(Guid key, CancellationToken cancellationToken)
+        {
+            var pendentes = await _documentoService.ObterDocumentoHistoricoPorKey(key, cancellationToken);
             return Ok(pendentes);
         }
     }
