@@ -5,9 +5,9 @@ namespace Fiotec.Pacto.Domain.Mappers.Documentos
 {
     public static class PendenteFinalizacaoManualMapper
     {
-        public static PendenteFinalizacaoManualViewModel MapFromDTO(PendenteFinalizacaoManualDTO dto)
+        public static DocumentoPendenteFinalizacaoManualViewModel MapFromDTO(PendenteFinalizacaoManualDTO dto)
         {
-            return new PendenteFinalizacaoManualViewModel
+            return new DocumentoPendenteFinalizacaoManualViewModel
             {
                 Id = dto.Id,
                 Key = dto.Key.ToString(),

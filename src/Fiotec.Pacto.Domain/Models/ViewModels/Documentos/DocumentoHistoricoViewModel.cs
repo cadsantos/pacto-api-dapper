@@ -1,9 +1,9 @@
 ﻿namespace Fiotec.Pacto.Domain.Models.ViewModels.Documentos
 {
-    public class HistoricoDocumentoViewModel
+    public class DocumentoHistoricoViewModel
     {
         public int UsuarioId { get; set; }
-        public Guid KeyDocumento { get; set; }
+        public Guid? KeyDocumento { get; set; }
         public string? NomeUsuario { get; set; }
         public string? Status { get; set; }
         public string? DataInclusao { get; set; }

@@ -39,6 +39,6 @@ namespace Fiotec.Pacto.Domain.Models.ViewModels.Documentos
         public bool HabilitaExcluirDocumento { get; set; }
         public bool HabilitaAnexosComplementares { get; set; }
         public List<AssinaturaViewModel> Assinaturas { get; set; } = new();
-        public List<HistoricoDocumentoViewModel> Historicos { get; set; } = new();
+        //public List<DocumentoHistoricoViewModel> Historicos { get; set; } = new();
     }
 }

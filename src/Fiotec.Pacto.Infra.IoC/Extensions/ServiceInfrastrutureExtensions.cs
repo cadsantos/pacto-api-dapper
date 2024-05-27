@@ -1,10 +1,16 @@
 ﻿using Fiotec.Pacto.Domain.Ports.Driven.Dicionarios;
 using Fiotec.Pacto.Domain.Ports.Driven.Documentos;
+using Fiotec.Pacto.Domain.Ports.Driven.Services.Arquivos;
+using Fiotec.Pacto.Domain.Ports.Driven.Services.Azure.BlobStorage;
 using Fiotec.Pacto.Domain.Ports.Driven.Services.Historicos;
+using Fiotec.Pacto.Domain.Ports.Driven.SolicitacoesMudanca;
 using Fiotec.Pacto.Infra.Data.Context;
 using Fiotec.Pacto.Infra.Data.Context.Abastraction;
 using Fiotec.Pacto.Infra.Data.Repositories.Dicionarios;
 using Fiotec.Pacto.Infra.Data.Repositories.Documentos;
+using Fiotec.Pacto.Infra.Data.Repositories.SolicitacoesMudanca;
+using Fiotec.Pacto.Infra.Services.Arquivos;
+using Fiotec.Pacto.Infra.Services.Azure.BlobStorage;
 using Fiotec.Pacto.Infra.Services.Historicos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +26,11 @@ namespace Fiotec.Pacto.Infra.IoC.Extensions
             service.AddTransient<ISqlConnectionContext, SqlConnectionContext>();
             service.AddTransient<IDicionarioRepository, DicionarioRepository>();
             service.AddTransient<IDocumentoRepository, DocumentoRepository>();
-            service.AddTransient<IHistoricoService, HistoricoService>();
+            service.AddTransient<ISolicitacaoMudancaRepository, SolicitacaoMudancaRepository>();
 
+            service.AddTransient<IHistoricoService, HistoricoService>();
+            service.AddTransient<IArquivoService, ArquivoService>();
+            service.AddTransient<IAzureBlobStorageService, AzureBlobStorageService>();
 
             var retryPolicy = HttpPolicyExtensions.HandleTransientHttpError()
                 .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));

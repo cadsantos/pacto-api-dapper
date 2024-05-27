@@ -1,35 +1,27 @@
-﻿using Fiotec.Pacto.Domain.Entities.Documentos;
-using Fiotec.Pacto.Domain.Enums;
+﻿using Fiotec.Pacto.Domain.Enums;
 using Fiotec.Pacto.Domain.Mappers.Documentos;
 using Fiotec.Pacto.Domain.Models.ViewModels.Documentos;
 using Fiotec.Pacto.Domain.Ports.Driven.Documentos;
+using Fiotec.Pacto.Domain.Ports.Driven.Services.Arquivos;
+using Fiotec.Pacto.Domain.Ports.Driven.Services.Azure.BlobStorage;
 using Fiotec.Pacto.Domain.Ports.Driven.Services.Historicos;
 using Fiotec.Pacto.Domain.Ports.Driving.Documentos;
-using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace Fiotec.Pacto.Application.Services.Documentos
 {
     public sealed class DocumentoService(
-        IDocumentoRepository _documentoRepository,
-        IHistoricoService _historicoService) : IDocumentoService
+        IConfiguration configuration,
+        IDocumentoRepository documentoRepository,
+        IHistoricoService historicoService,
+        IArquivoService arquivoService,
+        IAzureBlobStorageService azureBlobStorageService) : IDocumentoService
     {
         private const int ID_USUARIO = 9152;
 
-        public async Task<IEnumerable<PendenteAssinaturaViewModel>> ObterDocumentosPendentesAssinaturaPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
-        {
-            var pendentes = await _documentoRepository.ObterDocumentosPendentesAssinaturaPorIdUsuario(idUsuario, cancellationToken);
-            return pendentes.Select(PendenteAssinaturaMapper.MapFromDTO);
-        }
-        
-        public async Task<IEnumerable<PendenteFinalizacaoManualViewModel>> ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
-        {
-            var pendentes_manual = await _documentoRepository.ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(idUsuario, cancellationToken);
-            return pendentes_manual.Select(PendenteFinalizacaoManualMapper.MapFromDTO);
-        }
-        
         public async Task<DocumentoViewModel> ObterDocumentoDetalhesPorKey(Guid key, CancellationToken cancellationToken)
         {
-            var documento = await _documentoRepository.ObterDocumentoDetalhesPorKey(key, cancellationToken);
+            var documento = await documentoRepository.ObterDocumentoDetalhesPorKey(key, cancellationToken);
 
             if (documento is null)
                 return new DocumentoViewModel();
@@ -181,32 +173,45 @@ namespace Fiotec.Pacto.Application.Services.Documentos
                     documentoDetalhes.HabilitaBotaoDownloadAssinado = true;
             }
 
-            var historicos = await _historicoService.ObterHistoricoDocumento(documento.Key);
-            historicos?.Result?.ForEach(historico => documentoDetalhes.Historicos.Add(new HistoricoDocumentoViewModel()
-            {
-                UsuarioId = historico.UserLoginId.HasValue ? historico.UserLoginId.Value : 0,
-                KeyDocumento = documento.Key,
-                NomeUsuario = historico.UserLoginName,
-                DataInclusao = historico.DateTimeCreate.ToString(),
-                Status = historico.SystemStatusDetail,
-                Descricao = historico.Justification,
-                ProcessoDescricao = historico.ProcessDetail
-            }));
+            //var historicos = await historicoService.ObterHistoricoDocumento(documento.Key);
+            //historicos?.Result?.ForEach(historico => documentoDetalhes.Historicos.Add(new DocumentoHistoricoViewModel()
+            //{
+            //    UsuarioId = historico.UserLoginId.HasValue ? historico.UserLoginId.Value : 0,
+            //    KeyDocumento = documento.Key,
+            //    NomeUsuario = historico.UserLoginName,
+            //    DataInclusao = historico.DateTimeCreate.ToString(),
+            //    Status = historico.SystemStatusDetail,
+            //    Descricao = historico.Justification,
+            //    ProcessoDescricao = historico.ProcessDetail
+            //}));
+
             return documentoDetalhes;
         }
 
-        public async Task<IEnumerable<HistoricoDocumentoViewModel>> ObterDocumentoHistoricoPorKey(Guid key, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DocumentoPendenteAssinaturaViewModel>> ObterDocumentosPendentesAssinaturaPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
         {
-            var historicos_servico = await _historicoService.ObterHistoricoDocumento(key);
+            var pendentes = await documentoRepository.ObterDocumentosPendentesAssinaturaPorIdUsuario(idUsuario, cancellationToken);
+            return pendentes.Select(PendenteAssinaturaMapper.MapFromDTO);
+        }
+
+        public async Task<IEnumerable<DocumentoPendenteFinalizacaoManualViewModel>> ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
+        {
+            var pendentes_manual = await documentoRepository.ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(idUsuario, cancellationToken);
+            return pendentes_manual.Select(PendenteFinalizacaoManualMapper.MapFromDTO);
+        }
+
+        public async Task<IEnumerable<DocumentoHistoricoViewModel>> ObterDocumentoHistoricoPorKey(Guid key, CancellationToken cancellationToken)
+        {
+            var historicos_servico = await historicoService.ObterHistoricoDocumento(key);
 
             if (historicos_servico is null)
-                return new List<HistoricoDocumentoViewModel>();
+                return new List<DocumentoHistoricoViewModel>();
 
             return (from item in historicos_servico.Result
-                    let hist = new HistoricoDocumentoViewModel()
+                    let hist = new DocumentoHistoricoViewModel()
                     {
                         UsuarioId = item.UserLoginId.HasValue ? item.UserLoginId.Value : 0,
-                        KeyDocumento = Guid.Parse(item.InstanceKey),
+                        KeyDocumento = !string.IsNullOrEmpty(item.InstanceKey) ? new Guid(item.InstanceKey) : null,
                         NomeUsuario = item.UserLoginName,
                         DataInclusao = item.DateTimeCreate.ToString(),
                         Status = item.SystemStatusDetail,
@@ -214,6 +219,68 @@ namespace Fiotec.Pacto.Application.Services.Documentos
                         ProcessoDescricao = item.ProcessDetail
                     }
                     select hist).ToList();
+        }
+
+        public async Task<DocumentoArquivoViewModel?> ObterDocumentoArquivoPorKey(Guid key, int tipoDownload, CancellationToken cancellationToken)
+        {
+            var pasta_arquivos = configuration["AppSettings:PathArquivos"];
+            var blob_storage_ativo = bool.Parse(configuration["Services:Azure:BlobStorage:Ativo"]);
+            var documento = await documentoRepository.ObterDocumentoDetalhesPorKey(key, cancellationToken);
+
+            if (documento is null)
+                return new DocumentoArquivoViewModel();
+
+            switch (tipoDownload)
+            {
+                case (int)ETipoDownloadArquivo.Original:
+                    return new DocumentoArquivoViewModel()
+                    {
+                        Nome = documento.ObtemNomeArquivoOriginal(),
+                        Arquivo = !blob_storage_ativo ?
+                            await arquivoService.ObterArquivo($"{pasta_arquivos}\\{documento.ObtemCaminhoArquivo()}\\{documento.ObtemNomeArquivoOriginalPorKey()}") :
+                            await azureBlobStorageService.DownloadAsync($"{documento.ObtemCaminhoArquivo(blob_storage_ativo)}\\{documento.ObtemNomeArquivoOriginalPorKey()}")
+                    };
+                case (int)ETipoDownloadArquivo.Assinado:
+                    return new DocumentoArquivoViewModel()
+                    {
+                        Nome = documento.ObtemNomeArquivoAssinado(),
+                        Arquivo = !blob_storage_ativo ?
+                            await arquivoService.ObterArquivo($"{pasta_arquivos}\\{documento.ObtemCaminhoArquivo()}\\{documento.ObtemNomeArquivoAssinadoPorKey()}") :
+                            await azureBlobStorageService.DownloadAsync($"{documento.ObtemCaminhoArquivo(blob_storage_ativo)}\\{documento.ObtemNomeArquivoAssinadoPorKey()}")
+                    };
+                case (int)ETipoDownloadArquivo.OriginalEAssinado:
+                    return new DocumentoArquivoViewModel()
+                    {
+                        Nome = documento.ObtemNomeArquivoAssinado(),
+                        Arquivo = !blob_storage_ativo ?
+                            await arquivoService.ObterArquivo($"{pasta_arquivos}\\{documento.ObtemCaminhoArquivo()}\\{documento.ObtemNomeArquivoAssinadoPorKey()}") :
+                            await azureBlobStorageService.DownloadAsync($"{documento.ObtemCaminhoArquivo(blob_storage_ativo)}\\{documento.ObtemNomeArquivoAssinadoPorKey()}")
+                    };
+                default:
+                    if (documento.IsFinalizado())
+                    {
+                        return new DocumentoArquivoViewModel()
+                        {
+                            Nome = documento.ObtemNomeArquivoAssinado(),
+                            Arquivo = !blob_storage_ativo ?
+                                await arquivoService.ObterArquivo($"{pasta_arquivos}\\{documento.ObtemCaminhoArquivo()}\\{documento.ObtemNomeArquivoAssinadoPorKey()}") :
+                                await azureBlobStorageService.DownloadAsync($"{documento.ObtemCaminhoArquivo(blob_storage_ativo)}\\{documento.ObtemNomeArquivoAssinadoPorKey()}")
+                        };
+                    }
+
+                    if (!documento.IsFinalizado())
+                    {
+                        return new DocumentoArquivoViewModel()
+                        {
+                            Nome = documento.ObtemNomeArquivoOriginal(),
+                            Arquivo = !blob_storage_ativo ?
+                                await arquivoService.ObterArquivo($"{pasta_arquivos}{documento.ObtemCaminhoArquivo()}\\{documento.ObtemNomeArquivoOriginalPorKey()}") :
+                                await azureBlobStorageService.DownloadAsync($"{documento.ObtemCaminhoArquivo(blob_storage_ativo)}\\{documento.ObtemNomeArquivoOriginalPorKey()}")
+                        };
+                    }
+                    break;
+            }
+            return null;
         }
     }
 }

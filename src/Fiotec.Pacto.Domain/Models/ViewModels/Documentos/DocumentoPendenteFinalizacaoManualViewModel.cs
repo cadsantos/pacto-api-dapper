@@ -1,6 +1,6 @@
 ﻿namespace Fiotec.Pacto.Domain.Models.ViewModels.Documentos
 {
-    public class PendenteFinalizacaoManualViewModel
+    public class DocumentoPendenteFinalizacaoManualViewModel
     {
         public int Id { get; set; }
         public string? Key { get; set; }

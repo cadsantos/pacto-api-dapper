@@ -5,9 +5,9 @@ namespace Fiotec.Pacto.Domain.Mappers.Documentos
 {
     public static class PendenteAssinaturaMapper
     {
-        public static PendenteAssinaturaViewModel MapFromDTO(PendenteAssinaturaDTO dto)
+        public static DocumentoPendenteAssinaturaViewModel MapFromDTO(PendenteAssinaturaDTO dto)
         {
-            return new PendenteAssinaturaViewModel
+            return new DocumentoPendenteAssinaturaViewModel
             {
                 Id = dto.Id,
                 Key = dto.Key.ToString(),

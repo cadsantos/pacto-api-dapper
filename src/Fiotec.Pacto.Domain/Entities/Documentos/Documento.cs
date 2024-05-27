@@ -70,5 +70,32 @@ namespace Fiotec.Pacto.Domain.Entities.Documentos
             int?[] statusDeclinadoExpirado = { (int)EStatusAssinatura.Cancelado, (int)EStatusAssinatura.Expirado };
             return statusDeclinadoExpirado.Contains(IdStatus) && Assinaturas.Any(a => statusDeclinadoExpirado.Contains(a.IdStatus));
         }
+
+        public string ObtemNomeArquivoOriginal()
+        {
+            return $"{Nome} - Original.pdf";
+        }
+
+        public string ObtemNomeArquivoAssinado()
+        {
+            return $"{Nome} - Assinado.pdf";
+        }
+
+        public string ObtemNomeArquivoOriginalPorKey()
+        {
+            return $"{Key}_original.pdf";
+        }
+
+        public string ObtemNomeArquivoAssinadoPorKey()
+        {
+            return $"{Key}_assinado.pdf";
+        }
+
+        public string ObtemCaminhoArquivo(bool isBlob = false)
+        {
+            if (DataCadastro is null) return string.Empty;
+            if (isBlob) return $"{DataCadastro.Value.Year}\\{DataCadastro.Value.Month}\\{DataCadastro.Value.Day}";
+            return $"\\{DataCadastro.Value.Year}\\{DataCadastro.Value.Month}\\{DataCadastro.Value.Day}";
+        }
     }
 }

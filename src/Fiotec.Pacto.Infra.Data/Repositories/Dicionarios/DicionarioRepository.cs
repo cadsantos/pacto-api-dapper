@@ -8,11 +8,11 @@ using System.Data.SqlClient;
 
 namespace Fiotec.Pacto.Infra.Data.Repositories.Dicionarios
 {
-    public sealed class DicionarioRepository(ISqlConnectionContext _sqlConnection) : IDicionarioRepository
+    public sealed class DicionarioRepository(ISqlConnectionContext context) : IDicionarioRepository
     {
         public async Task<IReadOnlyList<TipoAssinatura>> ObterTiposAssinaturas(CancellationToken cancellationToken)
         {
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var tipos_assinaturas = await sqlConnection.QueryAsync<TipoAssinatura>(
                 new CommandDefinition("sp_ObterTiposAssinaturas", commandType: CommandType.StoredProcedure, cancellationToken: cancellationToken));
             return tipos_assinaturas.ToImmutableList();
@@ -20,7 +20,7 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Dicionarios
 
         public async Task<IReadOnlyList<TipoFinalizacao>> ObterTiposFinalizacoes(CancellationToken cancellationToken)
         {
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var tipos_finalizacoes = await sqlConnection.QueryAsync<TipoFinalizacao>(
                 new CommandDefinition("sp_ObterTiposFinalizacoes", commandType: CommandType.StoredProcedure, cancellationToken: cancellationToken));
             return tipos_finalizacoes.ToImmutableList();
@@ -28,7 +28,7 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Dicionarios
 
         public async Task<IReadOnlyList<StatusAssinatura>> ObterStatusAssianturas(CancellationToken cancellationToken)
         {
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var status_assinaturas = await sqlConnection.QueryAsync<StatusAssinatura>(
                 new CommandDefinition("sp_ObterStatusAssinaturas", commandType: CommandType.StoredProcedure, cancellationToken: cancellationToken));
             return status_assinaturas.ToImmutableList();
@@ -36,7 +36,7 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Dicionarios
 
         public async Task<IReadOnlyList<TipoAlteracao>> ObterTiposAlteracoes(CancellationToken cancellationToken)
         {
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var tipos_alteracoes = await sqlConnection.QueryAsync<TipoAlteracao>(
                 new CommandDefinition("sp_ObterTiposAlteracoes", commandType: CommandType.StoredProcedure, cancellationToken: cancellationToken));
             return tipos_alteracoes.ToImmutableList();
@@ -44,7 +44,7 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Dicionarios
 
         public async Task<IReadOnlyList<TipoAlteracao>> ObterTiposAlteracoesPorTipoResponsavel(char tipoResponsavel, CancellationToken cancellationToken)
         {
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var parametros = new DynamicParameters();
             parametros.Add("@TipoResponsavel", tipoResponsavel);
             var tipos_alteracoes = await sqlConnection.QueryAsync<TipoAlteracao>(

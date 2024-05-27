@@ -11,11 +11,11 @@ using System.Data.SqlClient;
 
 namespace Fiotec.Pacto.Infra.Data.Repositories.Documentos
 {
-    public sealed class DocumentoRepository(ISqlConnectionContext _sqlConnection) : IDocumentoRepository
+    public sealed class DocumentoRepository(ISqlConnectionContext context) : IDocumentoRepository
     {
         public async Task<IReadOnlyList<PendenteAssinaturaDTO>> ObterDocumentosPendentesAssinaturaPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
         {
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var parametros = new DynamicParameters();
             parametros.Add("@IdUsuario", idUsuario);
             var pendentes_assinatura = await sqlConnection.QueryAsync<PendenteAssinaturaDTO>(
@@ -25,7 +25,7 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Documentos
 
         public async Task<IReadOnlyList<PendenteFinalizacaoManualDTO>> ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
         {
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var parametros = new DynamicParameters();
             parametros.Add("@IdUsuario", idUsuario);
             var pendentes_assinatura = await sqlConnection.QueryAsync<PendenteFinalizacaoManualDTO>(
@@ -37,7 +37,7 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Documentos
         {
             Dictionary<int, Documento> documentosDictionary = new();
 
-            await using SqlConnection sqlConnection = _sqlConnection.CreateConnection();
+            await using SqlConnection sqlConnection = context.CreateConnection();
             var parametros = new DynamicParameters();
             parametros.Add("@DocumentoKey", key);
 
