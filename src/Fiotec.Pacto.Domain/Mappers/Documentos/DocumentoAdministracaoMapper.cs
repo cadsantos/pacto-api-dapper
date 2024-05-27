@@ -3,18 +3,18 @@ using Fiotec.Pacto.Domain.Models.ViewModels.Documentos;
 
 namespace Fiotec.Pacto.Domain.Mappers.Documentos
 {
-    public static class PendenteFinalizacaoManualMapper
+    public static class DocumentoAdministracaoMapper
     {
-        public static DocumentoPendenteFinalizacaoManualViewModel MapFromDTO(PendenteFinalizacaoManualDTO dto)
+        public static DocumentoAdministracaoViewModel MapFromDTO(DocumentoAdministracaoDTO dto)
         {
-            return new DocumentoPendenteFinalizacaoManualViewModel
+            return new DocumentoAdministracaoViewModel
             {
                 Id = dto.Id,
                 Key = dto.Key.ToString(),
                 Titulo = dto.Titulo,
                 Descricao = dto.Descricao,
                 Assinaturas = $"{dto.TotalAssinaturasRealizadas}/{dto.TotalAssinaturas}",
-                Situacao = dto.Situacao,
+                TipoFinalizacao = dto.TipoFinalizacao,
                 DataCadastro = dto.DataCadastro.ToString(),
                 PrazoFinalizacao = dto.PrazoFinalizacao.ToString()
             };

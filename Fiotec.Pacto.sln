@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiotec.Pacto.Infra.IoC", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiotec.Pacto.Infra.Services", "src\Fiotec.Pacto.Infra.Services\Fiotec.Pacto.Infra.Services.csproj", "{941C6BA1-42AA-4BE5-B230-7ADC83AB90C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiotec.Pacto.Infra.Utils", "src\Fiotec.Pacto.Infra.Utils\Fiotec.Pacto.Infra.Utils.csproj", "{7A6A9C9D-BB98-4B36-8991-BDD8F348ACA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiotec.Pacto.Infra.Utils", "src\Fiotec.Pacto.Infra.Utils\Fiotec.Pacto.Infra.Utils.csproj", "{7A6A9C9D-BB98-4B36-8991-BDD8F348ACA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

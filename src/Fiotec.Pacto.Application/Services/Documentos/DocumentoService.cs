@@ -191,13 +191,13 @@ namespace Fiotec.Pacto.Application.Services.Documentos
         public async Task<IEnumerable<DocumentoPendenteAssinaturaViewModel>> ObterDocumentosPendentesAssinaturaPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
         {
             var pendentes = await documentoRepository.ObterDocumentosPendentesAssinaturaPorIdUsuario(idUsuario, cancellationToken);
-            return pendentes.Select(PendenteAssinaturaMapper.MapFromDTO);
+            return pendentes.Select(DocumentoPendenteAssinaturaMapper.MapFromDTO);
         }
 
         public async Task<IEnumerable<DocumentoPendenteFinalizacaoManualViewModel>> ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
         {
             var pendentes_manual = await documentoRepository.ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(idUsuario, cancellationToken);
-            return pendentes_manual.Select(PendenteFinalizacaoManualMapper.MapFromDTO);
+            return pendentes_manual.Select(DocumentoPendenteFinalizacaoManualMapper.MapFromDTO);
         }
 
         public async Task<IEnumerable<DocumentoHistoricoViewModel>> ObterDocumentoHistoricoPorKey(Guid key, CancellationToken cancellationToken)
@@ -281,6 +281,12 @@ namespace Fiotec.Pacto.Application.Services.Documentos
                     break;
             }
             return null;
+        }
+
+        public async Task<IEnumerable<DocumentoAdministracaoViewModel>> ObterDocumentosAdministracaoPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
+        {
+            var documentos_administracao = await documentoRepository.ObterDocumentosAdministracaoPorIdUsuario(idUsuario, cancellationToken);
+            return documentos_administracao.Select(DocumentoAdministracaoMapper.MapFromDTO);
         }
     }
 }

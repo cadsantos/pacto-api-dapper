@@ -63,5 +63,15 @@ namespace Fiotec.Pacto.Infra.Data.Repositories.Documentos
 
             return documento_detalhe.GroupBy(d => d.Id).Select(g => g.First()).FirstOrDefault();
         }
+
+        public async Task<IReadOnlyList<DocumentoAdministracaoDTO>> ObterDocumentosAdministracaoPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
+        {
+            await using SqlConnection sqlConnection = context.CreateConnection();
+            var parametros = new DynamicParameters();
+            parametros.Add("@IdUsuario", idUsuario);
+            var documentos_administracao = await sqlConnection.QueryAsync<DocumentoAdministracaoDTO>(
+                new CommandDefinition("sp_ObterDocumentosAdministracaoPorIdUsuario", parameters: parametros, commandType: CommandType.StoredProcedure, cancellationToken: cancellationToken));
+            return documentos_administracao.ToImmutableList();
+        }
     }
 }

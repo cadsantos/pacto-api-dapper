@@ -56,6 +56,13 @@ namespace Fiotec.Pacto.API.Controllers
             return Ok(pendentes);
         }
 
+        [HttpGet("administracao/{idUsuario}")]
+        public async Task<IActionResult> ObterDocumentosAdministracaoPorIdUsuario(int idUsuario, CancellationToken cancellationToken)
+        {
+            var pendentes = await documentoService.ObterDocumentosAdministracaoPorIdUsuario(idUsuario, cancellationToken);
+            return Ok(pendentes);
+        }
+
 
     }
 }

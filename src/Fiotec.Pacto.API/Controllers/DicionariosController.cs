@@ -5,6 +5,7 @@ namespace Fiotec.Pacto.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class DicionariosController(IDicionarioService dicionarioService) : ControllerBase
     {
         [HttpGet("tipos-assinaturas")]

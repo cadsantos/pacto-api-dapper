@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Fiotec.Pacto.Domain\Fiotec.Pacto.Domain.csproj" />
     <ProjectReference Include="..\Fiotec.Pacto.Infra.Data\Fiotec.Pacto.Infra.Data.csproj" />
     <ProjectReference Include="..\Fiotec.Pacto.Infra.Services\Fiotec.Pacto.Infra.Services.csproj" />
+    <ProjectReference Include="..\Fiotec.Pacto.Infra.Utils\Fiotec.Pacto.Infra.Utils.csproj" />
   </ItemGroup>
 
 </Project>

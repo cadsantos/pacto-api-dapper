@@ -3,7 +3,7 @@ using Fiotec.Pacto.Domain.Models.ViewModels.Documentos;
 
 namespace Fiotec.Pacto.Domain.Mappers.Documentos
 {
-    public static class PendenteAssinaturaMapper
+    public static class DocumentoPendenteAssinaturaMapper
     {
         public static DocumentoPendenteAssinaturaViewModel MapFromDTO(PendenteAssinaturaDTO dto)
         {

@@ -7,6 +7,7 @@ namespace Fiotec.Pacto.Domain.Ports.Driven.Documentos
     {
         Task<IReadOnlyList<PendenteAssinaturaDTO>> ObterDocumentosPendentesAssinaturaPorIdUsuario(int idUsuario, CancellationToken cancellationToken);
         Task<IReadOnlyList<PendenteFinalizacaoManualDTO>> ObterDocumentosPendentesFinalizacaoManualPorIdUsuario(int idUsuario, CancellationToken cancellationToken);
+        Task<IReadOnlyList<DocumentoAdministracaoDTO>> ObterDocumentosAdministracaoPorIdUsuario(int idUsuario, CancellationToken cancellationToken);
         Task<Documento?> ObterDocumentoDetalhesPorKey(Guid key, CancellationToken cancellationToken);
     }
 }
