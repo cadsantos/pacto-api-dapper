@@ -1,5 +1,7 @@
 ﻿using Fiotec.Pacto.Domain.Ports.Driving.Dicionarios;
+using Fiotec.Pacto.Infra.Services.Filters;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Fiotec.Pacto.API.Controllers
 {
@@ -8,7 +10,7 @@ namespace Fiotec.Pacto.API.Controllers
 
     public class DicionariosController(IDicionarioService dicionarioService) : ControllerBase
     {
-        [HttpGet("tipos-assinaturas")]
+        [HttpGet("tipos-assinaturas")]        
         public async Task<IActionResult> ObterTiposAssinaturasAsync(CancellationToken cancellationToken)
         {
             var tipos_assinaturas = await dicionarioService.ObterTiposAssinaturas(cancellationToken);

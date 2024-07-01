@@ -12,9 +12,11 @@ using Fiotec.Pacto.Infra.Data.Repositories.Documentos;
 using Fiotec.Pacto.Infra.Data.Repositories.SolicitacoesMudanca;
 using Fiotec.Pacto.Infra.Services.Arquivos;
 using Fiotec.Pacto.Infra.Services.Azure.BlobStorage;
+using Fiotec.Pacto.Infra.Services.Filters;
 using Fiotec.Pacto.Infra.Services.Historicos;
 using Fiotec.Pacto.Infra.Services.SEG;
 using Fiotec.Pacto.Infra.Utils.Resources;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -35,7 +37,7 @@ namespace Fiotec.Pacto.Infra.IoC.Extensions
             service.AddTransient<IHistoricoService, HistoricoService>();
             service.AddTransient<IArquivoService, ArquivoService>();
             service.AddTransient<IAzureBlobStorageService, AzureBlobStorageService>();
-            service.AddTransient<ISegService, SegService>();
+            service.AddTransient<ISegService, SegService>();            
 
             var retryPolicy = HttpPolicyExtensions.HandleTransientHttpError()
                 .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
