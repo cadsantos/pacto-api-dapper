@@ -9,7 +9,7 @@ GET - dicionarios/status-assinaturas	- OK
 
 DOCUMENTOS
 
-GET - documentos/pendentes	- OK
+GET - documentos/pendentes		- OK
 GET - documentos/aguardando-manual	- OK
 
 
@@ -17,11 +17,11 @@ GET - documentos/totais
 GET - documentos/tramitando
 GET - documentos/{key}	- OK
 GET - documentos/decrypt
-GET - documentos/download
-GET - documentos/{key}/historico
-GET - documentos/{key}/assinaturas/{key_assinante}/{key_solicitacao_mudanca}
+GET - documentos/download - OK
+GET - documentos/{key}/historico - OK
+GET - documentos/{key}/assinaturas/{key_assinante}/{key_solicitacao_mudanca} - OK
 GET - documentos/pesquisa
-GET - documentos/administracao
+GET - documentos/administracao - OK
 
 POST - documento/ - inserir documento
 POST - documentos/${id}/assinaturas - incluir assinante documento
@@ -47,7 +47,7 @@ PATCH - assinaturas/lote
 
 MUDANCAS
 
-GET - mudancas/pendentes
+GET - mudancas/pendentes - OK
 
 PESSOAS
 
